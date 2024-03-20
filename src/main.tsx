@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './scss/app.scss'
 
 import App from './App.tsx'
+import { ErrorPage } from './pages/ErrorPage/ErrorPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
         element: <div>First Quest</div>,
       },
     ],
+    errorElement: <ErrorPage />,
   },
 ])
 
