@@ -1,12 +1,6 @@
 import { FC } from 'react'
 import { Button, Image, Modal, Typography } from 'antd'
-import {
-  RocketFilled,
-  SmileOutlined,
-  SmileFilled,
-  CopyFilled,
-  CopyOutlined,
-} from '@ant-design/icons'
+import { RocketFilled, CopyOutlined } from '@ant-design/icons'
 import placeholderSrc from '/500x500-example.png'
 
 const DESTINATION_ADDRESS = 'Carrer d’Albania 115, 08019 Barcelona'
