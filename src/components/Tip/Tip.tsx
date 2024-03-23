@@ -64,7 +64,7 @@ export const Tip: FC<TipProps> = ({ currentQuest }) => {
                   }}
                   onClick={() => Modal.destroyAll()}
                 >
-                  "Начать приключение"
+                  "Начать&nbsp;приключение"
                 </Typography.Text>{' '}
                 на главном экране!
               </Typography.Paragraph>
