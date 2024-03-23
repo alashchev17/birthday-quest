@@ -1,16 +1,8 @@
-// export const MAP_OF_QUESTS = {
-//   'Первый квест': '/first-quest',
-//   'Второй квест': '/second-quest',
-//   'Третий квест': '/third-quest',
-//   'Четвертый квест': '/fourth-quest',
-//   'Пятый квест': '/fifth-quest',
-// }
-
 export const MAP_OF_QUESTS = [
   {
     name: 'Первый квест',
     path: '/first-quest',
-    tip: 'Подсказка 1',
+    tip: 'Ответь на вопросы в мини-викторине правильно, чтобы завершить данный квест!',
   },
   {
     name: 'Второй квест',

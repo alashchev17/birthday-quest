@@ -6,6 +6,7 @@ import './scss/app.scss'
 
 import App from './App.tsx'
 import { ErrorPage } from './pages/ErrorPage/ErrorPage.tsx'
+import { FirstQuest } from './pages/Quests/FirstQuest/FirstQuest.tsx'
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'first-quest',
-        element: <div>First Quest</div>,
+        element: <FirstQuest />,
       },
     ],
     errorElement: <ErrorPage />,

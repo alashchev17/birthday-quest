@@ -150,12 +150,7 @@ export const Tip: FC<TipProps> = ({ currentQuest }) => {
     })
   }
   return (
-    <Button
-      type="primary"
-      size="large"
-      style={{ backgroundColor: '#A7377E', height: '45px' }}
-      onClick={askForHelpHandler}
-    >
+    <Button type="primary" size="large" onClick={askForHelpHandler}>
       Подсказка
     </Button>
   )

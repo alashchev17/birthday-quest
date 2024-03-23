@@ -2,11 +2,21 @@ import { FC } from 'react'
 import { Button, Image, Modal, Typography } from 'antd'
 import { RocketFilled, CopyOutlined } from '@ant-design/icons'
 import placeholderSrc from '/500x500-example.png'
-
-const DESTINATION_ADDRESS = "Carrer d'Albania 115, 08019 Barcelona"
+import { QUESTS_ADDRESSES } from '../../constants/QUESTS_ADDRESSES'
 
 export const Home: FC = () => {
   const startJourneyHandler = () => {
+    const activatedQuests: string[] = JSON.parse(
+      localStorage.getItem('activatedQuests') || '[]'
+    )
+    if (!activatedQuests.includes('home')) {
+      // Если квест "home" не активирован, добавляем его в общий массив в хранилище
+      localStorage.setItem(
+        'activatedQuests',
+        JSON.stringify([...activatedQuests, 'home'])
+      )
+    }
+
     Modal.info({
       width: 500,
       title: 'Первое задание!',
@@ -48,7 +58,7 @@ export const Home: FC = () => {
           />
           <Typography.Paragraph
             copyable={{
-              text: DESTINATION_ADDRESS,
+              text: QUESTS_ADDRESSES[0],
               tooltips: [
                 'Нажми, чтобы скопировать адрес',
                 'Скопировано в буфер обмена!',
@@ -113,7 +123,6 @@ export const Home: FC = () => {
           marginTop: '20px',
           padding: '15px 20px',
           height: 'unset',
-          backgroundColor: '#A7377E',
           fontWeight: 600,
         }}
         onClick={startJourneyHandler}

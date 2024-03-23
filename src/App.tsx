@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 
-import { Layout } from 'antd'
+import { Layout, ConfigProvider } from 'antd'
 
 import { Header } from './components/Header/Header'
 import { Home } from './pages/Home/Home'
@@ -29,12 +29,21 @@ const App: FC = () => {
   const { pathname } = useLocation()
   console.log(pathname)
   return (
-    <Layout style={layoutStyle}>
-      <Header />
-      <Layout.Content style={contentStyle}>
-        {pathname === '/' ? <Home /> : <Outlet />}
-      </Layout.Content>
-    </Layout>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#A7377E',
+          controlHeightLG: 45,
+        },
+      }}
+    >
+      <Layout style={layoutStyle}>
+        <Header />
+        <Layout.Content style={contentStyle}>
+          {pathname === '/' ? <Home /> : <Outlet />}
+        </Layout.Content>
+      </Layout>
+    </ConfigProvider>
   )
 }
 
