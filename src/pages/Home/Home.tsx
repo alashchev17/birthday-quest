@@ -3,6 +3,7 @@ import { Button, Image, Modal, Typography } from 'antd'
 import { RocketFilled, CopyOutlined } from '@ant-design/icons'
 import placeholderSrc from '/500x500-example.png'
 import { QUESTS_ADDRESSES } from '../../constants/QUESTS_ADDRESSES'
+import { DEVICE_WIDTH } from '../../constants/DEVICE_WIDTH'
 
 export const Home: FC = () => {
   const startJourneyHandler = () => {
@@ -80,11 +81,18 @@ export const Home: FC = () => {
 
   return (
     <>
-      <Typography.Title level={1} style={{ margin: 0 }}>
+      <Typography.Title
+        level={DEVICE_WIDTH < 768 ? 3 : 1}
+        style={{ margin: 0 }}
+      >
         Добро пожаловать на Квест!
       </Typography.Title>
       <Typography.Paragraph
-        style={{ margin: 0, maxWidth: '500px', fontSize: '18px' }}
+        style={{
+          margin: 0,
+          maxWidth: '500px',
+          fontSize: DEVICE_WIDTH < 768 ? '14px' : '18px',
+        }}
       >
         Если ты находишься на этой странице – значит у тебя сегодня{' '}
         <Typography.Text
@@ -101,7 +109,9 @@ export const Home: FC = () => {
         </Typography.Text>{' '}
         и именно поэтому ты можешь принять участие в Квесте
       </Typography.Paragraph>
-      <Typography.Paragraph style={{ margin: 0, fontSize: '18px' }}>
+      <Typography.Paragraph
+        style={{ margin: 0, fontSize: DEVICE_WIDTH < 768 ? '14px' : '18px' }}
+      >
         Начнём наше занимательное приключение{' '}
         <Typography.Text
           style={{
@@ -113,12 +123,12 @@ export const Home: FC = () => {
           }}
           strong
         >
-          прямо сейчас!
+          прямо&nbsp;сейчас!
         </Typography.Text>{' '}
       </Typography.Paragraph>
       <Button
         type="primary"
-        size="large"
+        size={DEVICE_WIDTH < 768 ? 'middle' : 'large'}
         style={{
           marginTop: '20px',
           padding: '15px 20px',

@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { Button, Modal, Typography } from 'antd'
 import { BulbFilled } from '@ant-design/icons'
+import { DEVICE_WIDTH } from '../../constants/DEVICE_WIDTH'
 
 type TipProps = {
   currentQuest: { name: string; path: string; tip: string } | undefined
@@ -150,7 +151,14 @@ export const Tip: FC<TipProps> = ({ currentQuest }) => {
     })
   }
   return (
-    <Button type="primary" size="large" onClick={askForHelpHandler}>
+    <Button
+      type="primary"
+      size={DEVICE_WIDTH < 768 ? 'large' : 'large'}
+      onClick={askForHelpHandler}
+      style={{
+        fontSize: DEVICE_WIDTH < 768 ? '14px' : '18px',
+      }}
+    >
       Подсказка
     </Button>
   )

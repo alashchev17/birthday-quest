@@ -1,125 +1,17 @@
 import { CopyOutlined, RocketFilled } from '@ant-design/icons'
-import {
-  Button,
-  Form,
-  Image,
-  Modal,
-  Radio,
-  Steps,
-  Typography,
-  message,
-} from 'antd'
+import { Button, Form, Image, Modal, Steps, Typography, message } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 
 import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import placeholderSrc from '../../../../public/500x500-example.png'
+
 import { QUESTS_ADDRESSES } from '../../../constants/QUESTS_ADDRESSES'
+import { DEVICE_WIDTH } from '../../../constants/DEVICE_WIDTH'
+import { FIRST_QUEST_STEPS } from '../../../constants/FIRST_QUEST_STEPS'
 
-const DEVICE_WIDTH = document.documentElement.clientWidth
-
-const STYLES_FOR_SHRINKING: React.CSSProperties = {
-  flexShrink: DEVICE_WIDTH < 768 ? 0 : 1,
-  width: DEVICE_WIDTH < 768 ? 'auto' : 'calc(100% / 3)',
-  fontSize: DEVICE_WIDTH < 768 ? '12px' : '16px',
-}
-
-const steps = [
-  {
-    title: 'Цвет',
-    content: (
-      <Form.Item
-        name="favouriteColor"
-        label="Какой мой любимый цвет?"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px',
-          justifyContent: 'center',
-        }}
-      >
-        <Radio.Group
-          buttonStyle="solid"
-          size={DEVICE_WIDTH < 768 ? 'middle' : 'large'}
-          style={{ display: 'flex', width: '100%', justifyContent: 'center' }}
-        >
-          <Radio.Button value="a" style={STYLES_FOR_SHRINKING}>
-            Красный
-          </Radio.Button>
-          <Radio.Button value="b" style={STYLES_FOR_SHRINKING}>
-            Голубой
-          </Radio.Button>
-          <Radio.Button value="c" style={STYLES_FOR_SHRINKING}>
-            Фиолетовый
-          </Radio.Button>
-        </Radio.Group>
-      </Form.Item>
-    ),
-  },
-  {
-    title: 'Первый поцелуй',
-    content: (
-      <Form.Item
-        name="firstKiss"
-        label="Когда мы впервые поцеловались?"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px',
-          justifyContent: 'center',
-        }}
-      >
-        <Radio.Group
-          buttonStyle="solid"
-          size={DEVICE_WIDTH < 768 ? 'small' : 'large'}
-          style={{ display: 'flex', width: '100%' }}
-        >
-          <Radio.Button value="a" style={STYLES_FOR_SHRINKING}>
-            {DEVICE_WIDTH < 768 ? '05.04.2023' : '5 апреля 2023'}
-          </Radio.Button>
-          <Radio.Button value="b" style={STYLES_FOR_SHRINKING}>
-            {DEVICE_WIDTH < 768 ? '07.04.2023' : '7 апреля 2023'}
-          </Radio.Button>
-          <Radio.Button value="c" style={STYLES_FOR_SHRINKING}>
-            {DEVICE_WIDTH < 768 ? '15.04.2023' : '15 апреля 2023'}
-          </Radio.Button>
-        </Radio.Group>
-      </Form.Item>
-    ),
-  },
-  {
-    title: 'Любимая сладость',
-    content: (
-      <Form.Item
-        name="favouriteSweet"
-        label="Какая моя любимая сладость?"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px',
-          justifyContent: 'center',
-        }}
-      >
-        <Radio.Group
-          buttonStyle="solid"
-          size={DEVICE_WIDTH < 768 ? 'middle' : 'large'}
-          style={{ display: 'flex', width: '100%' }}
-        >
-          <Radio.Button value="a" style={STYLES_FOR_SHRINKING}>
-            Шоколад
-          </Radio.Button>
-          <Radio.Button value="b" style={STYLES_FOR_SHRINKING}>
-            Желейки
-          </Radio.Button>
-          <Radio.Button value="c" style={STYLES_FOR_SHRINKING}>
-            Печеньки
-          </Radio.Button>
-        </Radio.Group>
-      </Form.Item>
-    ),
-  },
-]
+const steps = FIRST_QUEST_STEPS
 
 export const FirstQuest: FC = () => {
   const navigate = useNavigate()
@@ -248,23 +140,32 @@ export const FirstQuest: FC = () => {
       ),
     })
   }
+
   const validateAndNext = () => {
     const currentAnswer = form.getFieldsValue()
-    console.log(currentAnswer)
-    if (currentAnswer.favouriteColor && currentAnswer.favouriteColor !== 'a') {
-      message.error('Ответ неверен!')
-      return
-    }
-    if (currentAnswer.firstKiss && currentAnswer.firstKiss !== 'b') {
-      message.error('Ответ неверен!')
-      return
-    }
-    if (currentAnswer.favouriteSweet && currentAnswer.favouriteSweet !== 'a') {
+    if (
+      (currentAnswer.favouriteColor && currentAnswer.favouriteColor !== 'a') ||
+      (currentAnswer.firstKiss && currentAnswer.firstKiss !== 'b')
+    ) {
       message.error('Ответ неверен!')
       return
     }
     message.info('Ответ верен! Отвечай на следующий вопрос')
     next()
+  }
+
+  const completeQuest = () => {
+    const currentAnswer = form.getFieldsValue()
+    if (currentAnswer.favouriteSweet && currentAnswer.favouriteSweet !== 'a') {
+      message.error('Ответ неверен!')
+      return
+    }
+    message.success({
+      content:
+        'Поздравляю! Ты ответила на все вопросы правильно! Теперь ты можешь переходить к следующему квесту!',
+      duration: 5,
+    })
+    setIsCompleted(true)
   }
 
   return (
@@ -332,6 +233,7 @@ export const FirstQuest: FC = () => {
         >
           <div
             style={{
+              width: '100%',
               padding: '10px 20px',
               borderRadius: 10,
               border: '1px solid #A7377E',
@@ -353,20 +255,7 @@ export const FirstQuest: FC = () => {
           {current === steps.length - 1 && (
             <Button
               type="primary"
-              onClick={() => {
-                const currentAnswer = form.getFieldsValue()
-                console.log(currentAnswer)
-                if (currentAnswer.unknown && currentAnswer.unknown !== 'c') {
-                  message.error('Ответ неверен!')
-                  return
-                }
-                message.success({
-                  content:
-                    'Поздравляю! Ты ответила на все вопросы правильно! Теперь ты можешь переходить к следующему квесту!',
-                  duration: 5,
-                })
-                setIsCompleted(true)
-              }}
+              onClick={completeQuest}
               disabled={isCompleted}
             >
               Завершить
@@ -377,7 +266,7 @@ export const FirstQuest: FC = () => {
       {!isQuestStarted && (
         <Button
           type="primary"
-          size="large"
+          size={DEVICE_WIDTH < 768 ? 'middle' : 'large'}
           style={{
             padding: '15px 20px',
             height: 'unset',
@@ -392,7 +281,7 @@ export const FirstQuest: FC = () => {
       {isCompleted && (
         <Button
           type="primary"
-          size="large"
+          size={DEVICE_WIDTH < 768 ? 'middle' : 'large'}
           style={{
             padding: '15px 20px',
             height: 'unset',

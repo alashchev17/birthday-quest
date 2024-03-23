@@ -14,7 +14,7 @@ const layoutStyle: React.CSSProperties = {
 
 const contentStyle: React.CSSProperties = {
   textAlign: 'center',
-  minHeight: 'calc(100vh - 93px)',
+  minHeight: '100vh',
   padding: '0 16px',
   color: '#2E2E38',
   display: 'flex',

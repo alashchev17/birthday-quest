@@ -10,6 +10,8 @@ const headerStyle: React.CSSProperties = {
   height: 'unset',
   padding: '24px 16px',
   backgroundColor: '#FFC4D1',
+  position: 'fixed',
+  width: '100%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
