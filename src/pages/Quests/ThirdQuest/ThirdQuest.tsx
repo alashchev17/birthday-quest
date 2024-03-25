@@ -10,13 +10,20 @@ import {
 } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { QUESTS_DATA } from '../../../constants/QUESTS_DATA'
+import { TelegramMessageSender } from '../../../helpers/TelegramMessageSender'
 
 export const ThirdQuest = () => {
   const navigate = useNavigate()
   const [isCompleted, setIsCompleted] = useState(false)
   const [isQuestStarted, setIsQuestStarted] = useState(false)
 
-  const startNewQuest = () => {
+  const getIpAddress = async () => {
+    const response = await fetch('https://api.ipify.org?format=json')
+    const data = await response.json()
+    return data.ip
+  }
+
+  const startNewQuest = async () => {
     // Достаём из локального хранилища список активированных квестов
     const activatedQuests: string[] = JSON.parse(
       localStorage.getItem('activatedQuests') || '[]'
@@ -106,6 +113,22 @@ export const ThirdQuest = () => {
       })
       return
     }
+    const message = `
+<b>Внимание!</b>
+<b>Зафиксировано прохождение финального квеста, кто-то получил ключ-слово!</b>
+
+<i>Немного информации для дебага:</i>
+<b>User Agent:</b> <pre><code class="language-useragent">${
+      navigator.userAgent
+    }</code></pre>
+
+<b>IP Address:</b> ${await getIpAddress()}
+
+<b>Дата и время завершения квеста:</b> ${new Date().toLocaleString('ru-RU')}
+    `
+
+    // Отсылаем сообщение в телеграм группу о том, что квест был завершён:
+    await TelegramMessageSender(message, 'https://imgur.com/nCb0onR.gif')
 
     localStorage.setItem(
       'activatedQuests',
