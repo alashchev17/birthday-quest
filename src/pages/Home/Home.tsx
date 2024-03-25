@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { Button, Image, Modal, Typography } from 'antd'
 import { RocketFilled, CopyOutlined } from '@ant-design/icons'
 import placeholderSrc from '/500x500-example.png'
-import { QUESTS_ADDRESSES } from '../../constants/QUESTS_ADDRESSES'
+import { QUESTS_DATA } from '../../constants/QUESTS_DATA'
 import { DEVICE_WIDTH } from '../../constants/DEVICE_WIDTH'
 
 export const Home: FC = () => {
@@ -21,6 +21,7 @@ export const Home: FC = () => {
     Modal.info({
       width: 500,
       title: 'Первое задание!',
+      centered: true,
       icon: <RocketFilled style={{ color: '#A7377E' }} />,
       styles: {
         content: {
@@ -59,7 +60,7 @@ export const Home: FC = () => {
           />
           <Typography.Paragraph
             copyable={{
-              text: QUESTS_ADDRESSES[0],
+              text: QUESTS_DATA[0].address?.toString(),
               tooltips: [
                 'Нажми, чтобы скопировать адрес',
                 'Скопировано в буфер обмена!',

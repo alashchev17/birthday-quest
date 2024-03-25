@@ -12,6 +12,7 @@ export const Tip: FC<TipProps> = ({ currentQuest }) => {
     Modal.info({
       width: 500,
       title: 'Подсказка',
+      centered: true,
       icon: <BulbFilled style={{ color: '#A7377E' }} />,
       styles: {
         content: {
@@ -90,6 +91,7 @@ export const Tip: FC<TipProps> = ({ currentQuest }) => {
                 Modal.info({
                   width: 500,
                   title: 'Подсказка',
+                  centered: true,
                   icon: <BulbFilled style={{ color: '#A7377E' }} />,
                   styles: {
                     content: {

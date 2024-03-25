@@ -14,14 +14,4 @@ export const MAP_OF_QUESTS = [
     path: '/third-quest',
     tip: 'Подсказка 1',
   },
-  {
-    name: 'Четвертый квест',
-    path: '/fourth-quest',
-    tip: 'Подсказка 1',
-  },
-  {
-    name: 'Пятый квест',
-    path: '/fifth-quest',
-    tip: 'Подсказка 1',
-  },
 ]

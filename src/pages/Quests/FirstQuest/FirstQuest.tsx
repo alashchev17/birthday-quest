@@ -1,4 +1,4 @@
-import { CopyOutlined, RocketFilled } from '@ant-design/icons'
+import { CopyOutlined, RocketFilled, WarningFilled } from '@ant-design/icons'
 import { Button, Form, Image, Modal, Steps, Typography, message } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 
@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 
 import placeholderSrc from '../../../../public/500x500-example.png'
 
-import { QUESTS_ADDRESSES } from '../../../constants/QUESTS_ADDRESSES'
+import { QUESTS_DATA } from '../../../constants/QUESTS_DATA'
 import { DEVICE_WIDTH } from '../../../constants/DEVICE_WIDTH'
 import { FIRST_QUEST_STEPS } from '../../../constants/FIRST_QUEST_STEPS'
 
@@ -38,8 +38,9 @@ export const FirstQuest: FC = () => {
       // Если квест "home" не активирован, уведомляем человека о том, что данный квест ещё недоступен
       Modal.error({
         width: 500,
+        centered: true,
         title: 'Второе задание недоступно',
-        icon: <RocketFilled style={{ color: '#A7377E' }} />,
+        icon: <WarningFilled style={{ color: '#A7377E' }} />,
         styles: {
           content: {
             backgroundColor: '#DA9DAA',
@@ -83,6 +84,7 @@ export const FirstQuest: FC = () => {
     Modal.info({
       width: 500,
       title: 'Второе задание!',
+      centered: true,
       icon: <RocketFilled style={{ color: '#A7377E' }} />,
       styles: {
         content: {
@@ -121,7 +123,7 @@ export const FirstQuest: FC = () => {
           />
           <Typography.Paragraph
             copyable={{
-              text: QUESTS_ADDRESSES[1],
+              text: QUESTS_DATA[1].address?.toString(),
               tooltips: [
                 'Нажми, чтобы скопировать адрес',
                 'Скопировано в буфер обмена!',
@@ -181,6 +183,7 @@ export const FirstQuest: FC = () => {
         textAlign: 'center',
         gap: '20px',
         backgroundColor: '#DA9DAA',
+        color: '#2E2E38',
       }}
     >
       <Typography.Title
@@ -263,7 +266,7 @@ export const FirstQuest: FC = () => {
           )}
         </div>
       </div>
-      {!isQuestStarted && (
+      {!isQuestStarted && !isCompleted && (
         <Button
           type="primary"
           size={DEVICE_WIDTH < 768 ? 'middle' : 'large'}
