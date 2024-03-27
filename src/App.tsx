@@ -28,6 +28,7 @@ const contentStyle: React.CSSProperties = {
 const App: FC = () => {
   const { pathname } = useLocation()
   console.log(pathname)
+
   return (
     <ConfigProvider
       theme={{

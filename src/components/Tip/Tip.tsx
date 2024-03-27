@@ -155,11 +155,12 @@ export const Tip: FC<TipProps> = ({ currentQuest }) => {
   return (
     <Button
       type="primary"
-      size={DEVICE_WIDTH < 768 ? 'large' : 'large'}
+      size={DEVICE_WIDTH < 768 ? 'middle' : 'large'}
       onClick={askForHelpHandler}
       style={{
         fontSize: DEVICE_WIDTH < 768 ? '14px' : '18px',
       }}
+      icon={<BulbFilled />}
     >
       Подсказка
     </Button>

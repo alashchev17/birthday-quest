@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { DEVICE_WIDTH } from '../../../constants/DEVICE_WIDTH'
-import { Typography, Button, Modal } from 'antd'
+import { Typography, Button, Modal, message } from 'antd'
 import {
   CopyOutlined,
   FlagFilled,
@@ -11,19 +11,92 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { QUESTS_DATA } from '../../../constants/QUESTS_DATA'
 import { TelegramMessageSender } from '../../../helpers/TelegramMessageSender'
+import {
+  TELEGRAM_MESSAGE_DEBUG,
+  TELEGRAM_MESSAGE_PRODUCTION,
+} from '../../../constants/TELEGRAM_MESSAGES'
 
 export const ThirdQuest = () => {
   const navigate = useNavigate()
   const [isCompleted, setIsCompleted] = useState(false)
   const [isQuestStarted, setIsQuestStarted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
+  const [errorCounter, setErrorCounter] = useState(0)
 
-  const getIpAddress = async () => {
-    const response = await fetch('https://api.ipify.org?format=json')
-    const data = await response.json()
-    return data.ip
+  const showPassCode = (activatedQuests: string[]) => {
+    localStorage.setItem(
+      'activatedQuests',
+      JSON.stringify([...activatedQuests, 'thirdQuest'])
+    )
+
+    Modal.info({
+      width: 500,
+      title: 'Квест пройден!',
+      centered: true,
+      icon: <FlagFilled style={{ color: '#A7377E' }} />,
+      styles: {
+        content: {
+          backgroundColor: '#DA9DAA',
+          color: '#2E2E38',
+        },
+      },
+
+      footer: (
+        <Button
+          type="primary"
+          onClick={() => Modal.destroyAll()}
+          style={{
+            backgroundColor: '#A7377E',
+            display: 'block',
+            marginLeft: 'auto',
+            marginTop: '15px',
+          }}
+        >
+          Ура!
+        </Button>
+      ),
+      content: (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <Typography.Paragraph style={{ margin: 0 }}>
+            Финальный квест успешно пройден! Поздравляю с тем, что дошла до
+            конца!
+          </Typography.Paragraph>
+          <Typography.Paragraph style={{ margin: 0 }}>
+            Для получения главного приза квеста, обратись к Андрею или к Насте,
+            сказав фразу:{' '}
+            <Typography.Text
+              copyable={{
+                text: QUESTS_DATA[3].pass?.toString(),
+                tooltips: [
+                  'Нажми, чтобы скопировать ключ-слово!',
+                  'Скопировано в буфер обмена',
+                ],
+                icon: <CopyOutlined style={{ color: '#DA9DAA' }} />,
+              }}
+              style={{
+                marginTop: '15px',
+                display: 'inline-block',
+                color: '#ffffff',
+                backgroundColor: '#A7377E',
+                borderRadius: 5,
+                fontWeight: 700,
+                padding: '3px 5px',
+              }}
+            >
+              "Ребята, ключ-слово – {QUESTS_DATA[3].pass?.toString()}"
+            </Typography.Text>
+          </Typography.Paragraph>
+        </div>
+      ),
+    })
   }
 
   const startNewQuest = async () => {
+    if (isError) {
+      setIsError(false)
+    }
+
     // Достаём из локального хранилища список активированных квестов
     const activatedQuests: string[] = JSON.parse(
       localStorage.getItem('activatedQuests') || '[]'
@@ -113,88 +186,33 @@ export const ThirdQuest = () => {
       })
       return
     }
-    const message = `
-<b>Внимание!</b>
-<b>Зафиксировано прохождение финального квеста, кто-то получил ключ-слово!</b>
-
-<i>Немного информации для дебага:</i>
-<b>User Agent:</b> <pre><code class="language-useragent">${
-      navigator.userAgent
-    }</code></pre>
-
-<b>IP Address:</b> ${await getIpAddress()}
-
-<b>Дата и время завершения квеста:</b> ${new Date().toLocaleString('ru-RU')}
-    `
 
     // Отсылаем сообщение в телеграм группу о том, что квест был завершён:
-    await TelegramMessageSender(message, 'https://imgur.com/nCb0onR.gif')
-
-    localStorage.setItem(
-      'activatedQuests',
-      JSON.stringify([...activatedQuests, 'thirdQuest'])
+    setIsLoading(true)
+    await TelegramMessageSender(
+      import.meta.env.VITE_DEBUG_GROUP_ID
+        ? TELEGRAM_MESSAGE_DEBUG
+        : TELEGRAM_MESSAGE_PRODUCTION,
+      'https://imgur.com/nCb0onR.gif'
     )
-
-    Modal.info({
-      width: 500,
-      title: 'Квест пройден!',
-      centered: true,
-      icon: <FlagFilled style={{ color: '#A7377E' }} />,
-      styles: {
-        content: {
-          backgroundColor: '#DA9DAA',
-          color: '#2E2E38',
-        },
-      },
-
-      footer: (
-        <Button
-          type="primary"
-          onClick={() => Modal.destroyAll()}
-          style={{
-            backgroundColor: '#A7377E',
-            display: 'block',
-            marginLeft: 'auto',
-            marginTop: '15px',
-          }}
-        >
-          Ура!
-        </Button>
-      ),
-      content: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <Typography.Paragraph style={{ margin: 0 }}>
-            Финальный квест успешно пройден! Поздравляю с тем, что дошла до
-            конца!
-          </Typography.Paragraph>
-          <Typography.Paragraph style={{ margin: 0 }}>
-            Для получения главного приза квеста, обратись к Андрею или к Насте,
-            сказав фразу:{' '}
-            <Typography.Text
-              copyable={{
-                text: QUESTS_DATA[3].pass?.toString(),
-                tooltips: [
-                  'Нажми, чтобы скопировать ключ-слово!',
-                  'Скопировано в буфер обмена',
-                ],
-                icon: <CopyOutlined style={{ color: '#DA9DAA' }} />,
-              }}
-              style={{
-                marginTop: '15px',
-                display: 'inline-block',
-                color: '#ffffff',
-                backgroundColor: '#A7377E',
-                borderRadius: 5,
-                fontWeight: 700,
-                padding: '3px 5px',
-              }}
-            >
-              "Ребята, ключ-слово – {QUESTS_DATA[3].pass?.toString()}"
-            </Typography.Text>
-          </Typography.Paragraph>
-        </div>
-      ),
-    })
+      .then(() => {
+        showPassCode(activatedQuests)
+        setIsLoading(false)
+        setErrorCounter(0)
+      })
+      .catch(() => {
+        setIsLoading(false)
+        setIsError(true)
+        setErrorCounter((prev) => prev + 1)
+        message.error({
+          content: `Произошла непредвиденная ошибка, попробуй ещё раз. ${
+            errorCounter >= 2
+              ? 'Если ошибка повторяется много раз, обратись к Андрею'
+              : ''
+          }`,
+          duration: 5,
+        })
+      })
   }
 
   const completeQuest = () => {
@@ -270,10 +288,26 @@ export const ThirdQuest = () => {
             fontWeight: 600,
           }}
           onClick={startNewQuest}
-          icon={<GoldFilled />}
+          loading={isLoading}
+          icon={isError ? <WarningFilled /> : <GoldFilled />}
         >
-          Завершить квест
+          {isError ? 'Ошибка действия' : 'Завершить квест'}
         </Button>
+      )}
+      {import.meta.env.VITE_DEBUG_GROUP_ID && (
+        <Typography.Text
+          style={{
+            fontSize: 'inherit',
+            backgroundColor: '#A7377E',
+            color: '#ffffff',
+            padding: '2px 6px',
+            borderRadius: 6,
+            fontWeight: 700,
+            textDecoration: 'underline',
+          }}
+        >
+          Running in Debug Mode
+        </Typography.Text>
       )}
     </div>
   )
