@@ -11,10 +11,8 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { QUESTS_DATA } from '../../../constants/QUESTS_DATA'
 import { TelegramMessageSender } from '../../../helpers/TelegramMessageSender'
-import {
-  TELEGRAM_MESSAGE_DEBUG,
-  TELEGRAM_MESSAGE_PRODUCTION,
-} from '../../../constants/TELEGRAM_MESSAGES'
+import { TELEGRAM_MESSAGE_PRODUCTION } from '../../../constants/TELEGRAM_MESSAGES'
+import { getTelegramDebugMessage } from '../../../helpers/getTelegramDebugMessage'
 
 export const ThirdQuest = () => {
   const navigate = useNavigate()
@@ -191,7 +189,7 @@ export const ThirdQuest = () => {
     setIsLoading(true)
     await TelegramMessageSender(
       import.meta.env.VITE_DEBUG_GROUP_ID
-        ? TELEGRAM_MESSAGE_DEBUG
+        ? await getTelegramDebugMessage()
         : TELEGRAM_MESSAGE_PRODUCTION,
       'https://imgur.com/nCb0onR.gif'
     )
