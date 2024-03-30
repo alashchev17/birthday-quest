@@ -1,13 +1,60 @@
 import { FC } from 'react'
-import { Button, Modal, Typography } from 'antd'
+import { Button, Modal, Typography, message } from 'antd'
 import { BulbFilled } from '@ant-design/icons'
 import { DEVICE_WIDTH } from '../../constants/DEVICE_WIDTH'
+import { TelegramMessageSender } from '../../helpers/TelegramMessageSender'
 
 type TipProps = {
   currentQuest: { name: string; path: string; tip: string } | undefined
 }
 
 export const Tip: FC<TipProps> = ({ currentQuest }) => {
+  const showTip = (currentQuest: {
+    name: string
+    path: string
+    tip: string
+  }) => {
+    Modal.info({
+      width: 500,
+      title: 'Подсказка',
+      centered: true,
+      icon: <BulbFilled style={{ color: '#A7377E' }} />,
+      styles: {
+        content: {
+          backgroundColor: '#DA9DAA',
+          color: '#2E2E38',
+        },
+      },
+      content: (
+        <Typography.Paragraph style={{ margin: 0 }}>
+          {currentQuest.tip}
+        </Typography.Paragraph>
+      ),
+      footer: (
+        <div
+          style={{
+            display: 'flex',
+            marginTop: '15px',
+            width: '100%',
+            justifyContent: 'right',
+            gap: '10px',
+          }}
+        >
+          <Button
+            type="primary"
+            onClick={() => Modal.destroyAll()}
+            style={{
+              backgroundColor: '#A7377E',
+              display: 'inline-block',
+            }}
+          >
+            Закрыть
+          </Button>
+        </div>
+      ),
+    })
+  }
+
   const askForHelpHandler = () => {
     Modal.info({
       width: 500,
@@ -87,47 +134,17 @@ export const Tip: FC<TipProps> = ({ currentQuest }) => {
           {currentQuest && (
             <Button
               type="primary"
-              onClick={() =>
-                Modal.info({
-                  width: 500,
-                  title: 'Подсказка',
-                  centered: true,
-                  icon: <BulbFilled style={{ color: '#A7377E' }} />,
-                  styles: {
-                    content: {
-                      backgroundColor: '#DA9DAA',
-                      color: '#2E2E38',
-                    },
-                  },
-                  content: (
-                    <Typography.Paragraph style={{ margin: 0 }}>
-                      {currentQuest.tip}
-                    </Typography.Paragraph>
-                  ),
-                  footer: (
-                    <div
-                      style={{
-                        display: 'flex',
-                        marginTop: '15px',
-                        width: '100%',
-                        justifyContent: 'right',
-                        gap: '10px',
-                      }}
-                    >
-                      <Button
-                        type="primary"
-                        onClick={() => Modal.destroyAll()}
-                        style={{
-                          backgroundColor: '#A7377E',
-                          display: 'inline-block',
-                        }}
-                      >
-                        Закрыть
-                      </Button>
-                    </div>
-                  ),
-                })
-              }
+              onClick={async () => {
+                // Отправляем сообщение в телеграм о том, что была запрошена подсказка
+                const messageText = `Запрошена подсказка к квесту: <b>${currentQuest.name}</b>`
+                await TelegramMessageSender(messageText)
+                  .then(() => {
+                    showTip(currentQuest)
+                  })
+                  .catch(() => {
+                    message.error('Не удалось запросить подсказку')
+                  })
+              }}
               style={{
                 border: '1px solid #A7377E',
                 color: '#A7377E',
