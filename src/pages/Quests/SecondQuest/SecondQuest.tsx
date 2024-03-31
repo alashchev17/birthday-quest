@@ -1,13 +1,30 @@
 import { useState } from 'react'
 import { DEVICE_WIDTH } from '../../../constants/DEVICE_WIDTH'
-import { Typography, Button, Modal, Image } from 'antd'
-import { CopyOutlined, RocketFilled, WarningFilled } from '@ant-design/icons'
+import {
+  Typography,
+  Button,
+  Modal,
+  Image,
+  Form,
+  Input,
+  Flex,
+  message,
+} from 'antd'
+import {
+  CopyOutlined,
+  RocketFilled,
+  SendOutlined,
+  WarningFilled,
+} from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import placeholderSrc from '../../../../public/500x500-example.png'
+import quizImage from '../../../../public/secondQuestQuiz.jpg'
 import { QUESTS_DATA } from '../../../constants/QUESTS_DATA'
+import { useForm } from 'antd/es/form/Form'
 
 export const SecondQuest = () => {
   const navigate = useNavigate()
+  const [form] = useForm()
   const [isCompleted, setIsCompleted] = useState(false)
   const [isQuestStarted, setIsQuestStarted] = useState(false)
 
@@ -169,6 +186,18 @@ export const SecondQuest = () => {
   }
 
   const completeQuest = () => {
+    const { answer }: { answer: string } = form.getFieldsValue()
+    if (!answer || answer.trim() === '') {
+      message.error('Ответ не может быть пустым!')
+      return
+    }
+    if (answer.toLowerCase() !== 'именинница') {
+      message.error('Ответ неверен!')
+      return
+    }
+    message.success(
+      'Ответ верен! Теперь ты можешь переходить к следующему квесту!'
+    )
     setIsCompleted(true)
   }
 
@@ -243,7 +272,44 @@ export const SecondQuest = () => {
         </Button>
       )}
       {isQuestStarted && !isCompleted && (
-        <div onClick={completeQuest}>TODO QUEST</div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px',
+            padding: '20px',
+            borderRadius: 10,
+            border: '1px solid #A7377E',
+          }}
+        >
+          <div style={{ borderRadius: 10, overflow: 'hidden' }}>
+            <Image src={quizImage} width={500} />
+          </div>
+          <Form
+            form={form}
+            style={{ margin: 0 }}
+            initialValues={{
+              answer: '',
+            }}
+          >
+            <Form.Item name="answer" style={{ margin: 0 }}>
+              <Flex align="center" gap={8}>
+                <Input placeholder="Введи расшифровку ребуса" size="large" />
+                <Button
+                  type="primary"
+                  size="large"
+                  style={{
+                    display: 'inline-block',
+                    width: '45px',
+                    height: '45px',
+                  }}
+                  icon={<SendOutlined />}
+                  onClick={completeQuest}
+                />
+              </Flex>
+            </Form.Item>
+          </Form>
+        </div>
       )}{' '}
       {/* TODO */}
       {isCompleted && (

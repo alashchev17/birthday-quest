@@ -110,7 +110,8 @@ export const FirstQuest: FC = () => {
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Typography.Paragraph style={{ margin: 0 }}>
-            Вторая геолокация, где необходимо найти следующую метку:
+            Под деревом будут лежать священные свитки знаний того чем ты живешь
+            и вдохновляешься уже очень долгое время...
           </Typography.Paragraph>
           <Image
             style={{ margin: '0 auto', display: 'block' }}

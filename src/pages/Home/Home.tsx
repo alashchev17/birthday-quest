@@ -47,7 +47,9 @@ export const Home: FC = () => {
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Typography.Paragraph style={{ margin: 0 }}>
-            Первая геолокация, где необходимо найти твой первый секретик:
+            {
+              'Первую подсказку ты найдёшь практически возле себя, будь внимательна :)'
+            }
           </Typography.Paragraph>
           <Image
             style={{ margin: '0 auto', display: 'block' }}

@@ -1,18 +1,14 @@
 import { useState } from 'react'
 import { DEVICE_WIDTH } from '../../../constants/DEVICE_WIDTH'
-import { Typography, Button, Modal, message } from 'antd'
-import {
-  CopyOutlined,
-  FlagFilled,
-  GoldFilled,
-  RocketFilled,
-  WarningFilled,
-} from '@ant-design/icons'
+import { Typography, Button, Modal, message, Form, Image, Flex, Input } from 'antd'
+import { useForm } from 'antd/es/form/Form'
+import { CopyOutlined, FlagFilled, GoldFilled, RocketFilled, SendOutlined, WarningFilled } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { QUESTS_DATA } from '../../../constants/QUESTS_DATA'
 import { TelegramMessageSender } from '../../../helpers/TelegramMessageSender'
 import { TELEGRAM_MESSAGE_PRODUCTION } from '../../../constants/TELEGRAM_MESSAGES'
 import { getTelegramDebugMessage } from '../../../helpers/getTelegramDebugMessage'
+import quizImage from '../../../../public/thirdQuestQuiz.jpg'
 
 export const ThirdQuest = () => {
   const navigate = useNavigate()
@@ -21,12 +17,10 @@ export const ThirdQuest = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
   const [errorCounter, setErrorCounter] = useState(0)
+  const [form] = useForm()
 
   const showPassCode = (activatedQuests: string[]) => {
-    localStorage.setItem(
-      'activatedQuests',
-      JSON.stringify([...activatedQuests, 'thirdQuest'])
-    )
+    localStorage.setItem('activatedQuests', JSON.stringify([...activatedQuests, 'thirdQuest']))
 
     Modal.info({
       width: 500,
@@ -57,19 +51,14 @@ export const ThirdQuest = () => {
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Typography.Paragraph style={{ margin: 0 }}>
-            Финальный квест успешно пройден! Поздравляю с тем, что дошла до
-            конца!
+            Финальный квест успешно пройден! Поздравляю с тем, что дошла до конца!
           </Typography.Paragraph>
           <Typography.Paragraph style={{ margin: 0 }}>
-            Для получения главного приза квеста, обратись к Андрею или к Насте,
-            сказав фразу:{' '}
+            Для получения главного приза квеста, обратись к Андрею или к Насте, сказав фразу:{' '}
             <Typography.Text
               copyable={{
                 text: QUESTS_DATA[3].pass?.toString(),
-                tooltips: [
-                  'Нажми, чтобы скопировать ключ-слово!',
-                  'Скопировано в буфер обмена',
-                ],
+                tooltips: ['Нажми, чтобы скопировать ключ-слово!', 'Скопировано в буфер обмена'],
                 icon: <CopyOutlined style={{ color: '#DA9DAA' }} />,
               }}
               style={{
@@ -96,9 +85,7 @@ export const ThirdQuest = () => {
     }
 
     // Достаём из локального хранилища список активированных квестов
-    const activatedQuests: string[] = JSON.parse(
-      localStorage.getItem('activatedQuests') || '[]'
-    )
+    const activatedQuests: string[] = JSON.parse(localStorage.getItem('activatedQuests') || '[]')
     if (activatedQuests.length < 3) {
       // Если не все квесты пройдены, значит отображаем ошибку и не даём пользователю начать новый квест
       Modal.error({
@@ -115,14 +102,11 @@ export const ThirdQuest = () => {
         content: (
           <>
             <Typography.Paragraph>
-              Квесты идут последовательно, а это значит, что нельзя взять и
-              перескочить какой-то из этапов квеста, я ведь старался {' :('}
+              Квесты идут последовательно, а это значит, что нельзя взять и перескочить какой-то из этапов квеста, я ведь старался {' :('}
             </Typography.Paragraph>
             <Typography.Paragraph>
-              По нажатию на кнопку ниже, ты перейдёшь на главную страничку. Если
-              ты уже прошла какой-то квест – убедись, что ты нажала кнопку
-              просмотра геолокации, как сейчас. Если что-то пошло не по плану –
-              ты всегда знаешь, к кому обратиться{' :)'}
+              По нажатию на кнопку ниже, ты перейдёшь на главную страничку. Если ты уже прошла какой-то квест – убедись, что ты нажала
+              кнопку просмотра геолокации, как сейчас. Если что-то пошло не по плану – ты всегда знаешь, к кому обратиться{' :)'}
             </Typography.Paragraph>
           </>
         ),
@@ -158,12 +142,7 @@ export const ThirdQuest = () => {
             color: '#2E2E38',
           },
         },
-        content: (
-          <Typography.Paragraph>
-            Для начала нужно выполнить задание в третьем квесте, потом
-            возвращаться сюда!
-          </Typography.Paragraph>
-        ),
+        content: <Typography.Paragraph>Для начала нужно выполнить задание в третьем квесте, потом возвращаться сюда!</Typography.Paragraph>,
         footer: (
           <Button
             type="primary"
@@ -188,9 +167,7 @@ export const ThirdQuest = () => {
     // Отсылаем сообщение в телеграм группу о том, что квест был завершён:
     setIsLoading(true)
     await TelegramMessageSender(
-      import.meta.env.VITE_DEBUG_GROUP_ID
-        ? await getTelegramDebugMessage()
-        : TELEGRAM_MESSAGE_PRODUCTION,
+      import.meta.env.VITE_DEBUG_GROUP_ID ? await getTelegramDebugMessage() : TELEGRAM_MESSAGE_PRODUCTION,
       'https://imgur.com/nCb0onR.gif'
     )
       .then(() => {
@@ -204,9 +181,7 @@ export const ThirdQuest = () => {
         setErrorCounter((prev) => prev + 1)
         message.error({
           content: `Произошла непредвиденная ошибка, попробуй ещё раз. ${
-            errorCounter >= 2
-              ? 'Если ошибка повторяется много раз, обратись к Андрею'
-              : ''
+            errorCounter >= 2 ? 'Если ошибка повторяется много раз, обратись к Андрею' : ''
           }`,
           duration: 5,
         })
@@ -214,7 +189,20 @@ export const ThirdQuest = () => {
   }
 
   const completeQuest = () => {
-    setIsCompleted(true)
+    const { answer }: { answer: string } = form.getFieldsValue()
+    console.log(answer)
+    console.log('typeof of answer: ', typeof answer)
+    if (!answer || answer.trim() === '') {
+      message.error('Ответ не может быть пустым!')
+      return
+    }
+    if (answer.toLowerCase() === '29' || answer.toLowerCase() === 'двадцать девять') {
+      message.success('Ответ верен! Нажми на кнопку, чтобы завершить приключение!')
+      setIsCompleted(true)
+      return
+    }
+    message.error('Ответ неверен!')
+    return
   }
 
   return (
@@ -233,10 +221,7 @@ export const ThirdQuest = () => {
         color: '#2E2E38',
       }}
     >
-      <Typography.Title
-        level={DEVICE_WIDTH < 768 ? 3 : 1}
-        style={{ margin: 0, maxWidth: DEVICE_WIDTH < 768 ? 'unset' : '550px' }}
-      >
+      <Typography.Title level={DEVICE_WIDTH < 768 ? 3 : 1} style={{ margin: 0, maxWidth: DEVICE_WIDTH < 768 ? 'unset' : '550px' }}>
         А вот и финальный этап&nbsp;квеста!
       </Typography.Title>
       <Typography.Paragraph
@@ -248,12 +233,8 @@ export const ThirdQuest = () => {
       >
         Наше приключение вот-вот закончится, ты в шаге от разгадки!
       </Typography.Paragraph>
-      <Typography.Paragraph
-        style={{ margin: 0, fontSize: DEVICE_WIDTH < 768 ? '14px' : '18px' }}
-      >
-        {isCompleted
-          ? 'Нажимай кнопку снизу, чтобы узнать условия завершения квеста!'
-          : 'Жми кнопку, чтобы начать финальное задание :)'}
+      <Typography.Paragraph style={{ margin: 0, fontSize: DEVICE_WIDTH < 768 ? '14px' : '18px' }}>
+        {isCompleted ? 'Нажимай кнопку снизу, чтобы узнать условия завершения квеста!' : 'Жми кнопку, чтобы начать финальное задание :)'}
       </Typography.Paragraph>
       {!isQuestStarted && !isCompleted && (
         <Button
@@ -273,7 +254,44 @@ export const ThirdQuest = () => {
         </Button>
       )}
       {isQuestStarted && !isCompleted && (
-        <div onClick={completeQuest}>TODO QUEST</div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px',
+            padding: '20px',
+            borderRadius: 10,
+            border: '1px solid #A7377E',
+          }}
+        >
+          <div style={{ borderRadius: 10, overflow: 'hidden' }}>
+            <Image src={quizImage} width={500} />
+          </div>
+          <Form
+            form={form}
+            style={{ margin: 0 }}
+            initialValues={{
+              answer: '',
+            }}
+          >
+            <Form.Item name="answer" style={{ margin: 0 }}>
+              <Flex align="center" gap={8}>
+                <Input placeholder="Введи расшифровку ребуса" size="large" />
+                <Button
+                  type="primary"
+                  size="large"
+                  style={{
+                    display: 'inline-block',
+                    width: '45px',
+                    height: '45px',
+                  }}
+                  icon={<SendOutlined />}
+                  onClick={completeQuest}
+                />
+              </Flex>
+            </Form.Item>
+          </Form>
+        </div>
       )}{' '}
       {/* TODO */}
       {isCompleted && (
