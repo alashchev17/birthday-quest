@@ -10,6 +10,8 @@ import placeholderSrc from '../../../../public/500x500-example.png'
 import { QUESTS_DATA } from '../../../constants/QUESTS_DATA'
 import { DEVICE_WIDTH } from '../../../constants/DEVICE_WIDTH'
 import { FIRST_QUEST_STEPS } from '../../../constants/FIRST_QUEST_STEPS'
+import { TelegramMessageSender } from '../../../helpers/TelegramMessageSender'
+import { TELEGRAM_MESSAGE_FIRST_QUEST } from '../../../constants/TELEGRAM_MESSAGES'
 
 const steps = FIRST_QUEST_STEPS
 
@@ -18,6 +20,7 @@ export const FirstQuest: FC = () => {
   const [form] = useForm()
   const [isQuestStarted, setIsQuestStarted] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   // const { token } = theme.useToken()
   const [current, setCurrent] = useState(0)
@@ -28,11 +31,9 @@ export const FirstQuest: FC = () => {
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }))
 
-  const startNewQuest = () => {
+  const startNewQuest = async () => {
     // Достаём из локального хранилища список активированных квестов
-    const activatedQuests: string[] = JSON.parse(
-      localStorage.getItem('activatedQuests') || '[]'
-    )
+    const activatedQuests: string[] = JSON.parse(localStorage.getItem('activatedQuests') || '[]')
 
     if (!activatedQuests.includes('home')) {
       // Если квест "home" не активирован, уведомляем человека о том, что данный квест ещё недоступен
@@ -47,11 +48,7 @@ export const FirstQuest: FC = () => {
             color: '#2E2E38',
           },
         },
-        content: (
-          <Typography.Paragraph>
-            Для начала нужно выполнить задание в главном квесте
-          </Typography.Paragraph>
-        ),
+        content: <Typography.Paragraph>Для начала нужно выполнить задание в главном квесте</Typography.Paragraph>,
         footer: (
           <Button
             type="primary"
@@ -75,11 +72,13 @@ export const FirstQuest: FC = () => {
 
     if (!activatedQuests.includes('firstQuest')) {
       // Добавляем квест в список активированных квестов
-      localStorage.setItem(
-        'activatedQuests',
-        JSON.stringify([...activatedQuests, 'firstQuest'])
-      )
+      localStorage.setItem('activatedQuests', JSON.stringify([...activatedQuests, 'firstQuest']))
     }
+
+    // Отсылаем сообщение в Telegram о том, что был завершён первый квест
+    setIsLoading(true)
+    await TelegramMessageSender(TELEGRAM_MESSAGE_FIRST_QUEST)
+    setIsLoading(false)
 
     Modal.info({
       width: 500,
@@ -110,8 +109,7 @@ export const FirstQuest: FC = () => {
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Typography.Paragraph style={{ margin: 0 }}>
-            Под деревом будут лежать священные свитки знаний того чем ты живешь
-            и вдохновляешься уже очень долгое время...
+            Под деревом будут лежать священные свитки знаний того чем ты живешь и вдохновляешься уже очень долгое время...
           </Typography.Paragraph>
           <Image
             style={{ margin: '0 auto', display: 'block' }}
@@ -125,10 +123,7 @@ export const FirstQuest: FC = () => {
           <Typography.Paragraph
             copyable={{
               text: QUESTS_DATA[1].address?.toString(),
-              tooltips: [
-                'Нажми, чтобы скопировать адрес',
-                'Скопировано в буфер обмена!',
-              ],
+              tooltips: ['Нажми, чтобы скопировать адрес', 'Скопировано в буфер обмена!'],
               icon: <CopyOutlined style={{ color: '#A7377E' }} />,
             }}
             style={{
@@ -164,8 +159,7 @@ export const FirstQuest: FC = () => {
       return
     }
     message.success({
-      content:
-        'Поздравляю! Ты ответила на все вопросы правильно! Теперь ты можешь переходить к следующему квесту!',
+      content: 'Поздравляю! Ты ответила на все вопросы правильно! Теперь ты можешь переходить к следующему квесту!',
       duration: 5,
     })
     setIsCompleted(true)
@@ -187,16 +181,11 @@ export const FirstQuest: FC = () => {
         color: '#2E2E38',
       }}
     >
-      <Typography.Title
-        level={DEVICE_WIDTH < 768 ? 3 : 1}
-        style={{ margin: 0 }}
-      >
+      <Typography.Title level={DEVICE_WIDTH < 768 ? 3 : 1} style={{ margin: 0 }}>
         Поздравляю! <br />
         Ты нашла первый секретик!
       </Typography.Title>
-      <Typography.Paragraph
-        style={{ margin: 0, fontSize: DEVICE_WIDTH < 768 ? '14px' : '18px' }}
-      >
+      <Typography.Paragraph style={{ margin: 0, fontSize: DEVICE_WIDTH < 768 ? '14px' : '18px' }}>
         {isCompleted
           ? 'Теперь можешь переходить к следующему квесту! Жми кнопку!'
           : 'Чтобы продолжить прохождение квеста, ответь на парочку моих вопросов:'}
@@ -248,20 +237,12 @@ export const FirstQuest: FC = () => {
         </Form>
         <div>
           {current < steps.length - 1 && (
-            <Button
-              type="primary"
-              onClick={validateAndNext}
-              disabled={isCompleted}
-            >
+            <Button type="primary" onClick={validateAndNext} disabled={isCompleted}>
               Далее
             </Button>
           )}
           {current === steps.length - 1 && (
-            <Button
-              type="primary"
-              onClick={completeQuest}
-              disabled={isCompleted}
-            >
+            <Button type="primary" onClick={completeQuest} disabled={isCompleted}>
               Завершить
             </Button>
           )}
@@ -293,6 +274,7 @@ export const FirstQuest: FC = () => {
           }}
           onClick={startNewQuest}
           icon={<RocketFilled />}
+          loading={isLoading}
         >
           Перейти к следующему квесту
         </Button>

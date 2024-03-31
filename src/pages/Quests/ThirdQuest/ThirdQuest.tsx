@@ -20,7 +20,9 @@ export const ThirdQuest = () => {
   const [form] = useForm()
 
   const showPassCode = (activatedQuests: string[]) => {
-    localStorage.setItem('activatedQuests', JSON.stringify([...activatedQuests, 'thirdQuest']))
+    if (!activatedQuests.includes('thirdQuest')) {
+      localStorage.setItem('activatedQuests', JSON.stringify([...activatedQuests, 'thirdQuest']))
+    }
 
     Modal.info({
       width: 500,

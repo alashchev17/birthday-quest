@@ -1,38 +1,25 @@
 import { useState } from 'react'
 import { DEVICE_WIDTH } from '../../../constants/DEVICE_WIDTH'
-import {
-  Typography,
-  Button,
-  Modal,
-  Image,
-  Form,
-  Input,
-  Flex,
-  message,
-} from 'antd'
-import {
-  CopyOutlined,
-  RocketFilled,
-  SendOutlined,
-  WarningFilled,
-} from '@ant-design/icons'
+import { Typography, Button, Modal, Image, Form, Input, Flex, message } from 'antd'
+import { CopyOutlined, RocketFilled, SendOutlined, WarningFilled } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import placeholderSrc from '../../../../public/500x500-example.png'
 import quizImage from '../../../../public/secondQuestQuiz.jpg'
 import { QUESTS_DATA } from '../../../constants/QUESTS_DATA'
 import { useForm } from 'antd/es/form/Form'
+import { TELEGRAM_MESSAGE_SECOND_QUEST } from '../../../constants/TELEGRAM_MESSAGES'
+import { TelegramMessageSender } from '../../../helpers/TelegramMessageSender'
 
 export const SecondQuest = () => {
   const navigate = useNavigate()
   const [form] = useForm()
   const [isCompleted, setIsCompleted] = useState(false)
   const [isQuestStarted, setIsQuestStarted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const startNewQuest = () => {
+  const startNewQuest = async () => {
     // Достаём из локального хранилища список активированных квестов
-    const activatedQuests: string[] = JSON.parse(
-      localStorage.getItem('activatedQuests') || '[]'
-    )
+    const activatedQuests: string[] = JSON.parse(localStorage.getItem('activatedQuests') || '[]')
     if (activatedQuests.length < 2) {
       // Если не все квесты пройдены, значит отображаем ошибку и не даём пользователю начать новый квест
       Modal.error({
@@ -49,14 +36,11 @@ export const SecondQuest = () => {
         content: (
           <>
             <Typography.Paragraph>
-              Квесты идут последовательно, а это значит, что нельзя взять и
-              перескочить какой-то из этапов квеста, я ведь старался {' :('}
+              Квесты идут последовательно, а это значит, что нельзя взять и перескочить какой-то из этапов квеста, я ведь старался {' :('}
             </Typography.Paragraph>
             <Typography.Paragraph>
-              По нажатию на кнопку ниже, ты перейдёшь на главную страничку. Если
-              ты уже прошла какой-то квест – убедись, что ты нажала кнопку
-              просмотра геолокации, как сейчас. Если что-то пошло не по плану –
-              ты всегда знаешь, к кому обратиться{' :)'}
+              По нажатию на кнопку ниже, ты перейдёшь на главную страничку. Если ты уже прошла какой-то квест – убедись, что ты нажала
+              кнопку просмотра геолокации, как сейчас. Если что-то пошло не по плану – ты всегда знаешь, к кому обратиться{' :)'}
             </Typography.Paragraph>
           </>
         ),
@@ -92,12 +76,7 @@ export const SecondQuest = () => {
             color: '#2E2E38',
           },
         },
-        content: (
-          <Typography.Paragraph>
-            Для начала нужно выполнить задание во втором квесте, потом
-            возвращаться сюда!
-          </Typography.Paragraph>
-        ),
+        content: <Typography.Paragraph>Для начала нужно выполнить задание во втором квесте, потом возвращаться сюда!</Typography.Paragraph>,
         footer: (
           <Button
             type="primary"
@@ -119,10 +98,12 @@ export const SecondQuest = () => {
       return
     }
 
-    localStorage.setItem(
-      'activatedQuests',
-      JSON.stringify([...activatedQuests, 'secondQuest'])
-    )
+    localStorage.setItem('activatedQuests', JSON.stringify([...activatedQuests, 'secondQuest']))
+
+    // Отсылаем сообщение в Telegram о том, что был завершён первый квест
+    setIsLoading(true)
+    await TelegramMessageSender(TELEGRAM_MESSAGE_SECOND_QUEST)
+    setIsLoading(false)
 
     Modal.info({
       width: 500,
@@ -152,9 +133,7 @@ export const SecondQuest = () => {
       ),
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <Typography.Paragraph style={{ margin: 0 }}>
-            Третья геолокация, где необходимо найти следующую метку:
-          </Typography.Paragraph>
+          <Typography.Paragraph style={{ margin: 0 }}>Третья геолокация, где необходимо найти следующую метку:</Typography.Paragraph>
           <Image
             style={{ margin: '0 auto', display: 'block' }}
             src={placeholderSrc}
@@ -166,10 +145,7 @@ export const SecondQuest = () => {
           <Typography.Paragraph
             copyable={{
               text: QUESTS_DATA[2].address?.toString(),
-              tooltips: [
-                'Нажми, чтобы скопировать адрес',
-                'Скопировано в буфер обмена!',
-              ],
+              tooltips: ['Нажми, чтобы скопировать адрес', 'Скопировано в буфер обмена!'],
               icon: <CopyOutlined style={{ color: '#A7377E' }} />,
             }}
             style={{
@@ -195,9 +171,7 @@ export const SecondQuest = () => {
       message.error('Ответ неверен!')
       return
     }
-    message.success(
-      'Ответ верен! Теперь ты можешь переходить к следующему квесту!'
-    )
+    message.success('Ответ верен! Теперь ты можешь переходить к следующему квесту!')
     setIsCompleted(true)
   }
 
@@ -217,10 +191,7 @@ export const SecondQuest = () => {
         color: '#2E2E38',
       }}
     >
-      <Typography.Title
-        level={DEVICE_WIDTH < 768 ? 3 : 1}
-        style={{ margin: 0, maxWidth: DEVICE_WIDTH < 768 ? 'unset' : '550px' }}
-      >
+      <Typography.Title level={DEVICE_WIDTH < 768 ? 3 : 1} style={{ margin: 0, maxWidth: DEVICE_WIDTH < 768 ? 'unset' : '550px' }}>
         Вау! <br />
         Какое быстрое продвижение по квесту!
       </Typography.Title>
@@ -231,8 +202,7 @@ export const SecondQuest = () => {
           maxWidth: DEVICE_WIDTH < 768 ? 'unset' : '550px',
         }}
       >
-        Наверное, тебе нетерпиться узнать, что же будет в конце нашего
-        путешествия, но прежде чем мы продолжим, тебе нужно пройти{' '}
+        Наверное, тебе нетерпиться узнать, что же будет в конце нашего путешествия, но прежде чем мы продолжим, тебе нужно пройти{' '}
         <Typography.Text
           style={{
             fontSize: 'inherit',
@@ -247,12 +217,8 @@ export const SecondQuest = () => {
         </Typography.Text>
         , чтобы продвинуться дальше
       </Typography.Paragraph>
-      <Typography.Paragraph
-        style={{ margin: 0, fontSize: DEVICE_WIDTH < 768 ? '14px' : '18px' }}
-      >
-        {isCompleted
-          ? 'Теперь можешь переходить к следующему квесту! Жми кнопку!'
-          : 'Жми кнопку, чтобы начать :)'}
+      <Typography.Paragraph style={{ margin: 0, fontSize: DEVICE_WIDTH < 768 ? '14px' : '18px' }}>
+        {isCompleted ? 'Теперь можешь переходить к следующему квесту! Жми кнопку!' : 'Жми кнопку, чтобы начать :)'}
       </Typography.Paragraph>
       {!isQuestStarted && !isCompleted && (
         <Button
@@ -323,6 +289,7 @@ export const SecondQuest = () => {
           }}
           onClick={startNewQuest}
           icon={<RocketFilled />}
+          loading={isLoading}
         >
           Узнать задание финального квеста
         </Button>
