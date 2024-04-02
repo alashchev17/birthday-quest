@@ -5,13 +5,13 @@ import { useForm } from 'antd/es/form/Form'
 import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import placeholderSrc from '../../../../public/500x500-example.png'
+import placeholderSrc from '@/assets/500x500-example.png'
 
-import { QUESTS_DATA } from '../../../constants/QUESTS_DATA'
-import { DEVICE_WIDTH } from '../../../constants/DEVICE_WIDTH'
-import { FIRST_QUEST_STEPS } from '../../../constants/FIRST_QUEST_STEPS'
-import { TelegramMessageSender } from '../../../helpers/TelegramMessageSender'
-import { TELEGRAM_MESSAGE_FIRST_QUEST } from '../../../constants/TELEGRAM_MESSAGES'
+import { QUESTS_DATA } from '@/constants/QUESTS_DATA'
+import { DEVICE_WIDTH } from '@/constants/DEVICE_WIDTH'
+import { FIRST_QUEST_STEPS } from '@/constants/FIRST_QUEST_STEPS'
+import { TelegramMessageSender } from '@/helpers/TelegramMessageSender'
+import { TELEGRAM_MESSAGE_FIRST_QUEST } from '@/constants/TELEGRAM_MESSAGES'
 
 const steps = FIRST_QUEST_STEPS
 
@@ -172,7 +172,6 @@ export const FirstQuest: FC = () => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
         width: DEVICE_WIDTH < 768 ? '100vw' : 'auto',
         padding: '0 20px',
         textAlign: 'center',

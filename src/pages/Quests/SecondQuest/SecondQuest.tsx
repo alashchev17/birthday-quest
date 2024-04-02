@@ -1,14 +1,15 @@
-import { useState } from 'react'
-import { DEVICE_WIDTH } from '../../../constants/DEVICE_WIDTH'
-import { Typography, Button, Modal, Image, Form, Input, Flex, message } from 'antd'
+import placeholderSrc from '@/assets/500x500-example.png'
+import quizImage from '@/assets/secondQuestQuiz.jpg'
+import { ImageComponent } from '@/components/ImageComponent'
 import { CopyOutlined, RocketFilled, SendOutlined, WarningFilled } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
-import placeholderSrc from '../../../../public/500x500-example.png'
-import quizImage from '../../../../public/secondQuestQuiz.jpg'
-import { QUESTS_DATA } from '../../../constants/QUESTS_DATA'
+import { DEVICE_WIDTH } from '@/constants/DEVICE_WIDTH'
+import { QUESTS_DATA } from '@/constants/QUESTS_DATA'
+import { TELEGRAM_MESSAGE_SECOND_QUEST } from '@/constants/TELEGRAM_MESSAGES'
+import { TelegramMessageSender } from '@/helpers/TelegramMessageSender'
+import { Button, Flex, Form, Image, Input, Modal, Typography, message } from 'antd'
 import { useForm } from 'antd/es/form/Form'
-import { TELEGRAM_MESSAGE_SECOND_QUEST } from '../../../constants/TELEGRAM_MESSAGES'
-import { TelegramMessageSender } from '../../../helpers/TelegramMessageSender'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export const SecondQuest = () => {
   const navigate = useNavigate()
@@ -182,7 +183,6 @@ export const SecondQuest = () => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
         width: DEVICE_WIDTH < 768 ? '100vw' : 'auto',
         padding: '0 20px',
         textAlign: 'center',
@@ -249,7 +249,7 @@ export const SecondQuest = () => {
           }}
         >
           <div style={{ borderRadius: 10, overflow: 'hidden' }}>
-            <Image src={quizImage} width={500} />
+            <ImageComponent imageSrcToImport={quizImage} />
           </div>
           <Form
             form={form}
@@ -265,9 +265,7 @@ export const SecondQuest = () => {
                   type="primary"
                   size="large"
                   style={{
-                    display: 'inline-block',
-                    width: '45px',
-                    height: '45px',
+                    padding: '0 12px',
                   }}
                   icon={<SendOutlined />}
                   onClick={completeQuest}

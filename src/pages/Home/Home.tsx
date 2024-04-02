@@ -1,21 +1,16 @@
 import { FC } from 'react'
 import { Button, Image, Modal, Typography } from 'antd'
 import { RocketFilled, CopyOutlined } from '@ant-design/icons'
-import placeholderSrc from '/500x500-example.png'
-import { QUESTS_DATA } from '../../constants/QUESTS_DATA'
-import { DEVICE_WIDTH } from '../../constants/DEVICE_WIDTH'
+import placeholderSrc from '@/assets/500x500-example.png'
+import { QUESTS_DATA } from '@/constants/QUESTS_DATA'
+import { DEVICE_WIDTH } from '@/constants/DEVICE_WIDTH'
 
 export const Home: FC = () => {
   const startJourneyHandler = () => {
-    const activatedQuests: string[] = JSON.parse(
-      localStorage.getItem('activatedQuests') || '[]'
-    )
+    const activatedQuests: string[] = JSON.parse(localStorage.getItem('activatedQuests') || '[]')
     if (!activatedQuests.includes('home')) {
       // Если квест "home" не активирован, добавляем его в общий массив в хранилище
-      localStorage.setItem(
-        'activatedQuests',
-        JSON.stringify([...activatedQuests, 'home'])
-      )
+      localStorage.setItem('activatedQuests', JSON.stringify([...activatedQuests, 'home']))
     }
 
     Modal.info({
@@ -47,9 +42,7 @@ export const Home: FC = () => {
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Typography.Paragraph style={{ margin: 0 }}>
-            {
-              'Первую подсказку ты найдёшь практически возле себя, будь внимательна :)'
-            }
+            {'Первую подсказку ты найдёшь практически возле себя, будь внимательна :)'}
           </Typography.Paragraph>
           <Image
             style={{ margin: '0 auto', display: 'block' }}
@@ -63,10 +56,7 @@ export const Home: FC = () => {
           <Typography.Paragraph
             copyable={{
               text: QUESTS_DATA[0].address?.toString(),
-              tooltips: [
-                'Нажми, чтобы скопировать адрес',
-                'Скопировано в буфер обмена!',
-              ],
+              tooltips: ['Нажми, чтобы скопировать адрес', 'Скопировано в буфер обмена!'],
               icon: <CopyOutlined style={{ color: '#A7377E' }} />,
             }}
             style={{
@@ -84,10 +74,7 @@ export const Home: FC = () => {
 
   return (
     <>
-      <Typography.Title
-        level={DEVICE_WIDTH < 768 ? 3 : 1}
-        style={{ margin: 0 }}
-      >
+      <Typography.Title level={DEVICE_WIDTH < 768 ? 3 : 1} style={{ margin: 0 }}>
         Добро пожаловать на Квест!
       </Typography.Title>
       <Typography.Paragraph
@@ -112,9 +99,7 @@ export const Home: FC = () => {
         </Typography.Text>{' '}
         и именно поэтому ты можешь принять участие в Квесте
       </Typography.Paragraph>
-      <Typography.Paragraph
-        style={{ margin: 0, fontSize: DEVICE_WIDTH < 768 ? '14px' : '18px' }}
-      >
+      <Typography.Paragraph style={{ margin: 0, fontSize: DEVICE_WIDTH < 768 ? '14px' : '18px' }}>
         Начнём наше занимательное приключение{' '}
         <Typography.Text
           style={{

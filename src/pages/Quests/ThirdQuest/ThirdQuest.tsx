@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { DEVICE_WIDTH } from '../../../constants/DEVICE_WIDTH'
-import { Typography, Button, Modal, message, Form, Image, Flex, Input } from 'antd'
+import { DEVICE_WIDTH } from '@/constants/DEVICE_WIDTH'
+import { Typography, Button, Modal, message, Form, Flex, Input } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import { CopyOutlined, FlagFilled, GoldFilled, RocketFilled, SendOutlined, WarningFilled } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import { QUESTS_DATA } from '../../../constants/QUESTS_DATA'
-import { TelegramMessageSender } from '../../../helpers/TelegramMessageSender'
-import { TELEGRAM_MESSAGE_PRODUCTION } from '../../../constants/TELEGRAM_MESSAGES'
-import { getTelegramDebugMessage } from '../../../helpers/getTelegramDebugMessage'
-import quizImage from '../../../../public/thirdQuestQuiz.jpg'
+import { QUESTS_DATA } from '@/constants/QUESTS_DATA'
+import { TelegramMessageSender } from '@/helpers/TelegramMessageSender'
+import { TELEGRAM_MESSAGE_PRODUCTION } from '@/constants/TELEGRAM_MESSAGES'
+import { getTelegramDebugMessage } from '@/helpers/getTelegramDebugMessage'
+import quizImage from '@/assets/thirdQuestQuiz.jpg'
+import { ImageComponent } from '@/components/ImageComponent'
 
 export const ThirdQuest = () => {
   const navigate = useNavigate()
@@ -214,7 +215,6 @@ export const ThirdQuest = () => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
         width: DEVICE_WIDTH < 768 ? '100vw' : 'auto',
         padding: '0 20px',
         textAlign: 'center',
@@ -267,7 +267,7 @@ export const ThirdQuest = () => {
           }}
         >
           <div style={{ borderRadius: 10, overflow: 'hidden' }}>
-            <Image src={quizImage} width={500} />
+            <ImageComponent imageSrcToImport={quizImage} />
           </div>
           <Form
             form={form}
