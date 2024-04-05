@@ -1,18 +1,22 @@
 import { FC } from 'react'
 import { Button, Image, Modal, Typography } from 'antd'
 import { RocketFilled, CopyOutlined } from '@ant-design/icons'
-import placeholderSrc from '@/assets/500x500-example.png'
+import locationSrc from '@/assets/secondQuestLocation.jpg'
 import { QUESTS_DATA } from '@/constants/QUESTS_DATA'
 import { DEVICE_WIDTH } from '@/constants/DEVICE_WIDTH'
+import { TelegramMessageSender } from '@/helpers/TelegramMessageSender'
+import { TELEGRAM_MESSAGE_START_QUEST } from '@/constants/TELEGRAM_MESSAGES'
 
 export const Home: FC = () => {
-  const startJourneyHandler = () => {
+  const startJourneyHandler = async () => {
     const activatedQuests: string[] = JSON.parse(localStorage.getItem('activatedQuests') || '[]')
     if (!activatedQuests.includes('home')) {
       // Если квест "home" не активирован, добавляем его в общий массив в хранилище
       localStorage.setItem('activatedQuests', JSON.stringify([...activatedQuests, 'home']))
     }
 
+    // Отсылаем сообщение в телеграм о том, что квест начался
+    await TelegramMessageSender(TELEGRAM_MESSAGE_START_QUEST)
     Modal.info({
       width: 500,
       title: 'Первое задание!',
@@ -45,13 +49,14 @@ export const Home: FC = () => {
             {'Первую подсказку ты найдёшь практически возле себя, будь внимательна :)'}
           </Typography.Paragraph>
           <Image
-            style={{ margin: '0 auto', display: 'block' }}
-            src={placeholderSrc}
+            style={{ margin: '0 auto', display: 'block', objectFit: 'cover' }}
+            src={locationSrc}
             alt="map"
             preview={{
-              src: placeholderSrc,
+              src: locationSrc,
             }}
             width="100%"
+            height={400}
           />
           <Typography.Paragraph
             copyable={{

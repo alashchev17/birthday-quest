@@ -5,6 +5,13 @@ export const TELEGRAM_MESSAGE_PRODUCTION = `
 <b>Дата и время завершения квеста:</b> ${new Date().toLocaleString('ru-RU')}
 `
 
+export const TELEGRAM_MESSAGE_START_QUEST = `
+<b>[УВЕДОМЛЕНИЕ ПО КВЕСТУ]</b>
+
+<b>Кто-то начал прохождение квеста только что!</b>
+<b>Дата и время старта:</b> ${new Date().toLocaleString('ru-RU')}
+`
+
 export const TELEGRAM_MESSAGE_FIRST_QUEST = `
 <b>[УВЕДОМЛЕНИЕ ПО КВЕСТУ]</b>
 

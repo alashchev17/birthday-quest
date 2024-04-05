@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 
-import { Layout, ConfigProvider } from 'antd'
+import { Layout, ConfigProvider, Typography } from 'antd'
 
 import { Header } from './components/Header/Header'
 import { Home } from './pages/Home/Home'
@@ -41,7 +41,48 @@ const App: FC = () => {
     >
       <Layout style={layoutStyle}>
         <Header />
-        <Layout.Content style={contentStyle}>{pathname === '/' ? <Home /> : <Outlet />}</Layout.Content>
+
+        <Layout.Content style={contentStyle}>
+          {pathname === '/' ? (
+            <>
+              <Home />{' '}
+              {import.meta.env.VITE_DEBUG_GROUP_ID && (
+                <Typography.Text
+                  style={{
+                    fontSize: 'inherit',
+                    backgroundColor: '#A7377E',
+                    color: '#ffffff',
+                    padding: '2px 6px',
+                    borderRadius: 6,
+                    fontWeight: 700,
+                    textDecoration: 'underline',
+                  }}
+                >
+                  Running in Debug Mode
+                </Typography.Text>
+              )}
+            </>
+          ) : (
+            <>
+              <Outlet />
+              {import.meta.env.VITE_DEBUG_GROUP_ID && (
+                <Typography.Text
+                  style={{
+                    fontSize: 'inherit',
+                    backgroundColor: '#A7377E',
+                    color: '#ffffff',
+                    padding: '2px 6px',
+                    borderRadius: 6,
+                    fontWeight: 700,
+                    textDecoration: 'underline',
+                  }}
+                >
+                  Running in Debug Mode
+                </Typography.Text>
+              )}
+            </>
+          )}
+        </Layout.Content>
       </Layout>
     </ConfigProvider>
   )

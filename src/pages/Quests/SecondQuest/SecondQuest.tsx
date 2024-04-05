@@ -1,4 +1,4 @@
-import placeholderSrc from '@/assets/500x500-example.png'
+import locationSrc from '@/assets/thirdQuestLocation.jpg'
 import quizImage from '@/assets/secondQuestQuiz.jpg'
 import { ImageComponent } from '@/components/ImageComponent'
 import { CopyOutlined, RocketFilled, SendOutlined, WarningFilled } from '@ant-design/icons'
@@ -136,12 +136,13 @@ export const SecondQuest = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Typography.Paragraph style={{ margin: 0 }}>Третья геолокация, где необходимо найти следующую метку:</Typography.Paragraph>
           <Image
-            style={{ margin: '0 auto', display: 'block' }}
-            src={placeholderSrc}
+            style={{ margin: '0 auto', display: 'block', objectFit: 'cover' }}
+            src={locationSrc}
             preview={{
-              src: placeholderSrc,
+              src: locationSrc,
             }}
             width="100%"
+            height={400}
           />
           <Typography.Paragraph
             copyable={{

@@ -4,17 +4,17 @@
 export const QUESTS_DATA = [
   {
     id: 1,
-    address: "Carrer d'Albania 6, 08019 Barcelona",
+    address: 'https://maps.app.goo.gl/RWPMDcFqwvZwzfpVA',
     pass: null,
   },
   {
     id: 2,
-    address: "Passeig d'Prim 100, 08019 Barcelona",
+    address: 'https://maps.app.goo.gl/2FTjXa9zpRe2yyGN8',
     pass: null,
   },
   {
     id: 3,
-    address: "Passeig d'Prim 100, 08019 Barcelona",
+    address: 'https://maps.app.goo.gl/rTTJq2HgWPNsF5ZP8',
     pass: null,
   },
   {

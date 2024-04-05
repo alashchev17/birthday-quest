@@ -5,7 +5,7 @@ import { useForm } from 'antd/es/form/Form'
 import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import placeholderSrc from '@/assets/500x500-example.png'
+import locationSrc from '@/assets/secondQuestLocation.jpg'
 
 import { QUESTS_DATA } from '@/constants/QUESTS_DATA'
 import { DEVICE_WIDTH } from '@/constants/DEVICE_WIDTH'
@@ -112,13 +112,14 @@ export const FirstQuest: FC = () => {
             Под деревом будут лежать священные свитки знаний того чем ты живешь и вдохновляешься уже очень долгое время...
           </Typography.Paragraph>
           <Image
-            style={{ margin: '0 auto', display: 'block' }}
-            src={placeholderSrc}
+            style={{ margin: '0 auto', display: 'block', objectFit: 'cover' }}
+            src={locationSrc}
             alt="map"
             preview={{
-              src: placeholderSrc,
+              src: locationSrc,
             }}
             width="100%"
+            height={400}
           />
           <Typography.Paragraph
             copyable={{

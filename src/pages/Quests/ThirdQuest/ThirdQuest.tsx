@@ -312,21 +312,6 @@ export const ThirdQuest = () => {
           {isError ? 'Ошибка действия' : 'Завершить квест'}
         </Button>
       )}
-      {import.meta.env.VITE_DEBUG_GROUP_ID && (
-        <Typography.Text
-          style={{
-            fontSize: 'inherit',
-            backgroundColor: '#A7377E',
-            color: '#ffffff',
-            padding: '2px 6px',
-            borderRadius: 6,
-            fontWeight: 700,
-            textDecoration: 'underline',
-          }}
-        >
-          Running in Debug Mode
-        </Typography.Text>
-      )}
     </div>
   )
 }
