@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { Button, Image, Modal, Typography } from 'antd'
 import { RocketFilled, CopyOutlined } from '@ant-design/icons'
-import locationSrc from '@/assets/secondQuestLocation.jpg'
+import locationSrc from '@/assets/firstQuestLocation.jpg'
 import { QUESTS_DATA } from '@/constants/QUESTS_DATA'
 import { DEVICE_WIDTH } from '@/constants/DEVICE_WIDTH'
 import { TelegramMessageSender } from '@/helpers/TelegramMessageSender'
